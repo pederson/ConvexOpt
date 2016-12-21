@@ -8,24 +8,25 @@ using namespace std;
 
 int main(int argc, char * argv[]){
 
-	unsigned int niters = 20;
-	Matrix Q = randmat(5,5);
-	Vector b = randvec(5);
-	oracle_fn oracle = [Q,b](const Vector & x)->Vector{return (~Q)*Q*x+b;};
-	cvx_fn func = [Q,b](const Vector & x)->double{Vector Qx = Q*x; return 0.5*Vector::dot(Qx,Qx)+Vector::dot(b,x);};
+	unsigned int niters = 30;
+	unsigned int vecsize = 10;
+	Matrix Q = randmat(vecsize, vecsize);
+	Vector b = randvec(vecsize);
+	oracle_fn oracle = [Q,b](const Vector & x)->Vector{return (~Q)*Q*x-b;};
+	cvx_fn func = [Q,b](const Vector & x)->double{Vector Qx = Q*x; return 0.5*Vector::dot(Qx,Qx)-Vector::dot(b,x);};
 	
 	// constant step function 
 	stepsize_fn const_step = [](unsigned int k, const Vector & x, const Vector & d, const Vector & gf)->double{return constant_step(0.05);};
 
 	// decreasing step function
-	stepsize_fn decr_step = [](unsigned int k, const Vector & x, const Vector & d, const Vector & gf)->double{return inverse_step(2,2,k);};
+	stepsize_fn decr_step = [](unsigned int k, const Vector & x, const Vector & d, const Vector & gf)->double{return inverse_step(1,2,k);};
 
 	// backtracking line search step
 	stepsize_fn btls = [func](unsigned int k, const Vector & x, const Vector & d, const Vector & gf)->double{return btls_step(0.4, 0.9, x, d, gf, func);};
 
 	// try with a constant step 
 	cout << "************* GD - CONSTANT STEP ************" << endl;
-	Vector x = randvec(5);
+	Vector x = randvec(vecsize);
 	for (unsigned int k=0; k<niters; k++){
 		x = gradient::gd_step(x, oracle, const_step, k);
 		// cout << "x(" << k+1 << "): " << x ; 
@@ -35,7 +36,7 @@ int main(int argc, char * argv[]){
 
 	cout << "************* GD - DECREASING STEP ************" << endl;
 	// try with a decreasing step size
-	x = randvec(5);
+	x = randvec(vecsize);
 	for (unsigned int k=0; k<niters; k++){
 		x = gradient::gd_step(x, oracle, decr_step, k);
 		// cout << "x(" << k+1 << "): " << x ; 
@@ -44,7 +45,7 @@ int main(int argc, char * argv[]){
 
 	cout << "************* GD - BTLS STEP ************" << endl;
 	// try with a decreasing step size
-	x = randvec(5);
+	x = randvec(vecsize);
 	for (unsigned int k=0; k<niters; k++){
 		x = gradient::gd_step(x, oracle, btls, k);
 		// cout << "x(" << k+1 << "): " << x ; 
