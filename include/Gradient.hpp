@@ -187,7 +187,7 @@ namespace gradient{
 		// get gradient direction
 		SparseVector pgrad = partial_grad(x, i);
 		SparseVector pgrad_old = partial_grad(x_old, i);
-		SparseVector sp_old_grad = Vector::get_support(old_grad, pgrad);
+		SparseVector sp_old_grad = old_grad.get_support(pgrad);
 		SparseVector gd = pgrad - pgrad_old + sp_old_grad;
 
 
@@ -198,6 +198,43 @@ namespace gradient{
 		SparseVector xnew = x - gamma*gd;
 		return xnew;
 	}
+
+
+	/*
+	// frank-wolfe step
+	SparseVector fw_step(const SparseVector & x, 
+					 const SparseVector & x_old,
+					 sp_partial_grad_fn partial_grad,
+					 const Vector & old_grad,
+					 sp_stepsize_fn stepsize,
+					 unsigned int k,
+					 unsigned int n){
+	}
+
+
+	// ISTA step
+	Vector ista_step(const Vector & x, 
+					 const Vector & x_old,
+					 partial_grad_fn partial_grad,
+					 const Vector & old_grad,
+					 stepsize_fn stepsize,
+					 unsigned int k,
+					 unsigned int n){
+
+	}
+
+	// Fast-ISTA (FISTA) step
+	Vector fista_step(const Vector & x, 
+					 const Vector & x_old,
+					 partial_grad_fn partial_grad,
+					 const Vector & old_grad,
+					 stepsize_fn stepsize,
+					 unsigned int k,
+					 unsigned int n){
+
+	}
+	*/
+
 }
 
 
