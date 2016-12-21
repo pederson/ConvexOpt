@@ -1,3 +1,6 @@
+#ifndef _GRADIENT_H
+#define _GRADIENT_H
+
 #include <functional>
 
 #include "../LinearAlgebra/Matrix.hpp"
@@ -170,7 +173,7 @@ namespace gradient{
 	// an oracle function that returns the gradient at a point x,
 	// a step size function that returns the step size,
 	// a prox operator that returns the prox value
-	SparseVector svrg_step(const SparseVector & x, 
+	SparseVector kromagnon_step(const SparseVector & x, 
 					 const SparseVector & x_old,
 					 sp_partial_grad_fn partial_grad,
 					 const Vector & old_grad,
@@ -195,6 +198,7 @@ namespace gradient{
 		SparseVector xnew = x - gamma*gd;
 		return xnew;
 	}
-
-
 }
+
+
+#endif
