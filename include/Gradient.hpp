@@ -2,6 +2,8 @@
 #define _GRADIENT_H
 
 #include <functional>
+#include <random>
+#include <ctime>
 
 #include "../LinearAlgebra/Matrix.hpp"
 #include "../LinearAlgebra/SparseVector.hpp"
@@ -116,6 +118,32 @@ namespace gradient{
 	// an oracle function that returns the gradient at a point x,
 	// a step size function that returns the step size,
 	// a prox operator that returns the prox value
+	Vector sgd_step(const Vector & x, 
+				   partial_grad_fn partial_grad,
+				   stepsize_fn stepsize,
+				   unsigned int k,
+				   unsigned int n){
+
+		// get a random row
+		unsigned int i=rand()%(n-1);
+
+		// get gradient direction
+		Vector pgrad = partial_grad(x, i);
+
+		// get stepsize
+		double gamma = stepsize(k, x, -1*pgrad, pgrad);
+
+		// take step
+		Vector xnew = x - gamma*pgrad;
+		return xnew;
+	}
+
+	// ******* SPARSE *********
+	// one step of stochastic gradient descent
+	// given the previous step x,
+	// an oracle function that returns the gradient at a point x,
+	// a step size function that returns the step size,
+	// a prox operator that returns the prox value
 	SparseVector sgd_step(const SparseVector & x, 
 				   sp_partial_grad_fn partial_grad,
 				   sp_stepsize_fn stepsize,
@@ -151,6 +179,7 @@ namespace gradient{
 					 unsigned int n){
 
 		// get a random row
+		srand(time(NULL));
 		unsigned int i=rand()%(n-1);
 
 		// get gradient direction
@@ -173,7 +202,7 @@ namespace gradient{
 	// an oracle function that returns the gradient at a point x,
 	// a step size function that returns the step size,
 	// a prox operator that returns the prox value
-	SparseVector kromagnon_step(const SparseVector & x, 
+	SparseVector svrg_step(const SparseVector & x, 
 					 const SparseVector & x_old,
 					 sp_partial_grad_fn partial_grad,
 					 const Vector & old_grad,
@@ -182,6 +211,7 @@ namespace gradient{
 					 unsigned int n){
 
 		// get a random row
+		srand(time(NULL));
 		unsigned int i=rand()%(n-1);
 
 		// get gradient direction
