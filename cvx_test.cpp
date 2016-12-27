@@ -34,8 +34,6 @@ int main(int argc, char * argv[]){
 																 out(argmin(gd)) = -gam*sgn(gd(argmin(gd)));
 																 return out;};
 
-
-
 	// Function 3 (Sparse Regression) ---> min 1/2 ||Sx-b||^2
 	// cvx_fn 		func3 = [S,b](const SparseVector & x)->double{return 0.5*norm_2(S*x-b);};
 
